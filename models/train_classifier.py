@@ -18,17 +18,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
-# from sklearn.base import BaseEstimator,TransformerMixin
 from sklearn.metrics import classification_report,make_scorer,f1_score
 from sklearn.model_selection import GridSearchCV
-
-# class ohe_transformer(BaseEstimator,TransformerMixin):
-#     def fit(self,X,y=None):
-#         return self
-#     def transform(self,X,y=None):
-#         X = np.reshape(np.array(X),(-1,1))
-#         X = OneHotEncoder(sparse=False).fit_transform(X)
-#         return X
 
 def load_data(database_filepath):
     # Creating link to database file
@@ -147,3 +138,6 @@ def main():
     
 if __name__ == '__main__':
     main()
+
+
+# Dependencies: plotly pandas nltk flask sklearn

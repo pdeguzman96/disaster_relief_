@@ -12,7 +12,7 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 from joblib import load
 from sqlalchemy import create_engine
-from models.cust_tokenizer import tokenize_stem
+from cust_tokenizer import tokenize_stem
 
 app = Flask(__name__)
 
@@ -20,7 +20,7 @@ app = Flask(__name__)
 engine = create_engine('sqlite:///./data/DisasterResponse.db')
 df = pd.read_sql_table('messages', engine)
 # load model
-model = load("./models/classifier.joblib")
+model = load("classifier.joblib")
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')

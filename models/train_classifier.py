@@ -5,11 +5,6 @@ import numpy as np
 from joblib import dump,load
 from sqlalchemy import create_engine
 
-# NLP
-from nltk.tokenize import word_tokenize
-from nltk.stem.porter import PorterStemmer
-from nltk.corpus import stopwords
-
 # ML
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.pipeline import Pipeline
@@ -20,6 +15,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import classification_report,make_scorer,f1_score
 from sklearn.model_selection import GridSearchCV
+from cust_tokenizer import tokenize_stem
 
 def load_data(database_filepath):
     # Creating link to database file
@@ -34,15 +30,6 @@ def load_data(database_filepath):
 
     return X, Y
 
-def tokenize_stem(text):
-    tokens = word_tokenize(text.lower())
-    # Removing Stopwords
-    tokens = [w for w in tokens if w not in stopwords.words('english')]
-    # Stemming
-    stemmed = [PorterStemmer().stem(w) for w in tokens]
-    
-    return stemmed
-
 def build_model():
 
     # Pipeline to process the messages
@@ -51,7 +38,6 @@ def build_model():
     ])
     # Pieline to process the genres
     genre_pipeline = Pipeline([
-        # ('ohe',ohe_transformer())
         ('ohe',OneHotEncoder())
     ])
     # Combining these into a column transformer

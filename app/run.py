@@ -40,7 +40,12 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+
+    # Data used for plot 2
+    melted_df = df.melt(id_vars=['id','message','original','genre'],var_name='category',value_name='value')
+    direct_melted_df = melted_df[melted_df['genre']=='direct']
+    news_melted_df = melted_df[melted_df['genre']=='news']
+    social_melted_df = melted_df[melted_df['genre']=='social']   
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -61,7 +66,42 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+        {
+            'data': [
+                Bar(
+                    x=[s.replace('_', ' ').title() for s in news_melted_df.groupby('category')['value'].sum().index],
+                    y=direct_melted_df.groupby('category')['value'].sum(),
+                    name='Direct'
+                ),
+                Bar(
+                    x=[s.replace('_', ' ').title() for s in news_melted_df.groupby('category')['value'].sum().index],
+                    y=news_melted_df.groupby('category')['value'].sum(),
+                    name='News'
+                ),
+                Bar(
+                    x=[s.replace('_', ' ').title() for s in social_melted_df.groupby('category')['value'].sum().index],
+                    y=social_melted_df.groupby('category')['value'].sum(),
+                    name='Social'
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'tickangle': 35,
+                    'automargin': True,
+                    
+                },
+                'barmode': 'stack',
+                # 'xaxis_tickangle': -45
+            }
         }
+        
     ]
     
     # encode plotly graphs in JSON

@@ -26,10 +26,10 @@ def tokenize_stem(text):
 
 
 # load data
-engine = create_engine('sqlite:///../data/DisasterResponse.db')
+engine = create_engine('sqlite:///./data/DisasterResponse.db')
 df = pd.read_sql_table('messages', engine)
 # load model
-model = load("../models/model1.joblib")
+model = load("./models/model1.joblib")
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')

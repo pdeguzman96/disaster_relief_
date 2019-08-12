@@ -12,17 +12,18 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 from joblib import load
 from sqlalchemy import create_engine
+from models.train_classifier import tokenize_stem
 
 app = Flask(__name__)
 
-def tokenize_stem(text):
-    tokens = word_tokenize(text.lower())
-    # Removing Stopwords
-    tokens = [w for w in tokens if w not in stopwords.words('english')]
-    # Stemming
-    stemmed = [PorterStemmer().stem(w) for w in tokens]
+# def tokenize_stem(text):
+#     tokens = word_tokenize(text.lower())
+#     # Removing Stopwords
+#     tokens = [w for w in tokens if w not in stopwords.words('english')]
+#     # Stemming
+#     stemmed = [PorterStemmer().stem(w) for w in tokens]
     
-    return stemmed
+#     return stemmed
 
 
 # load data
@@ -127,8 +128,8 @@ def go():
 
 
 def main():
-    # app.run(host='0.0.0.0', port=3001, debug=True) # <--- Removed for deployment to web
-    pass
+    app.run(host='0.0.0.0', port=3001, debug=True) # <--- Removed for deployment to web
+    # pass
 
 
 if __name__ == '__main__':

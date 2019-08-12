@@ -1,11 +1,11 @@
 import json
 import plotly
 import pandas as pd
+import plotly.graph_objs as gobj
 
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from sklearn.base import BaseEstimator,TransformerMixin
 
 from flask import Flask
 from flask import render_template, request, jsonify
@@ -35,54 +35,37 @@ model = load("../models/model1.joblib")
 @app.route('/')
 @app.route('/index')
 def index():
-    
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
 
-    # Data used for plot 2
+    # Data used for plot 1
     melted_df = df.melt(id_vars=['id','message','original','genre'],var_name='category',value_name='value')
     direct_melted_df = melted_df[melted_df['genre']=='direct']
     news_melted_df = melted_df[melted_df['genre']=='news']
     social_melted_df = melted_df[melted_df['genre']=='social']   
-    # create visuals
-    # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
+    
+    # Data for Plot 2
+    genre_counts = df.groupby('genre').count()['message']
+    genre_names = list(genre_counts.index)
 
-            'layout': {
-                'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
-        },
+    graphs = [
         {
             'data': [
                 Bar(
                     x=[s.replace('_', ' ').title() for s in news_melted_df.groupby('category')['value'].sum().index],
                     y=direct_melted_df.groupby('category')['value'].sum(),
-                    name='Direct'
+                    name='Direct',
+                    marker=dict(color='turquoise')
                 ),
                 Bar(
                     x=[s.replace('_', ' ').title() for s in news_melted_df.groupby('category')['value'].sum().index],
                     y=news_melted_df.groupby('category')['value'].sum(),
-                    name='News'
+                    name='News',
+                    marker=dict(color='tomato')
                 ),
                 Bar(
                     x=[s.replace('_', ' ').title() for s in social_melted_df.groupby('category')['value'].sum().index],
                     y=social_melted_df.groupby('category')['value'].sum(),
-                    name='Social'
+                    name='Social',
+                    marker=dict(color='olive')
                 )
             ],
 
@@ -98,9 +81,21 @@ def index():
                     
                 },
                 'barmode': 'stack',
-                # 'xaxis_tickangle': -45
             }
-        }
+        },
+        {
+            'data': [
+                gobj.Pie(
+                    labels=[s.title() for s in genre_names],
+                    values=genre_counts,
+                    marker=dict(colors=['turquoise','tomato','olive'])
+                )
+            ],
+
+            'layout': {
+                'title': 'Proportions of Message Genres',
+            }
+        },
         
     ]
     

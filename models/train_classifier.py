@@ -7,7 +7,6 @@ from sqlalchemy import create_engine
 
 # NLP
 from nltk.tokenize import word_tokenize
-from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 

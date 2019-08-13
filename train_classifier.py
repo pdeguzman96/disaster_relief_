@@ -18,6 +18,17 @@ from sklearn.model_selection import GridSearchCV
 from cust_tokenizer import tokenize_stem
 
 def load_data(database_filepath):
+    '''
+    Loads data given a database filepath using sqlite.
+
+    Input
+    ==============
+    database_filepath: filepath to the database file of messages
+
+    Returns
+    ==============
+    X and Y matrix
+    '''
     # Creating link to database file
     engine = create_engine('sqlite:///'+database_filepath)
     # Reading in data
@@ -31,7 +42,13 @@ def load_data(database_filepath):
     return X, Y
 
 def build_model():
+    '''
+    Creates a full pipeline
 
+    Returns
+    ==============
+    Pipeline object to be trained
+    '''
     # Pipeline to process the messages
     msg_pipeline = Pipeline([
         ('tfidf',TfidfVectorizer(tokenizer=tokenize_stem)),
@@ -56,7 +73,7 @@ def build_model():
 
 def custom_scorer(y_true,y_pred):
     '''
-    Used to score for GridSearch
+    Used to score for GridSearch. Averages f1-score across all 36 categories
     '''
     running_f1 = 0
     for i,col in enumerate(y_true):
@@ -64,6 +81,9 @@ def custom_scorer(y_true,y_pred):
     return running_f1/len(y_true.columns)
 
 def evaluate_model(model, X_test, y_test):
+    '''
+    Calculates and prints metrics for each category, then averages and prints all 36 metrics.
+    '''
     # Setting Running Metrics
     running_accuracy=0
     running_weighted_f1=0
@@ -91,9 +111,6 @@ def evaluate_model(model, X_test, y_test):
     print(f'Average Precision: {avg_wtd_precision:.4f}')
     print(f'Average Recall: {avg_wtd_recall:.4f}')
     return None
-
-def save_model(model, model_filepath):
-    dump(model,model_filepath)
 
 def main():
     if len(sys.argv) == 3:
@@ -124,6 +141,3 @@ def main():
     
 if __name__ == '__main__':
     main()
-
-
-# Dependencies: plotly pandas nltk flask sklearn

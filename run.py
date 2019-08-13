@@ -22,7 +22,7 @@ df = pd.read_sql_table('messages', engine)
 # load model
 model = load("classifier.joblib")
 
-# index webpage displays cool visuals and receives user input text for model
+# index webpage displays visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
 def index():
@@ -101,15 +101,14 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
-    # save user input in query
+    # saves user input in query
     query = request.args.get('query', '') 
     model_input = pd.DataFrame([[query,'direct']],columns=['message','genre'])
 
-    # use model to predict classification for query
+    # using model to predict classification for query
     classification_labels = model.predict(model_input)[0]
     classification_results = dict(zip(df.columns[4:], classification_labels))
-
-    # This will render the go.html Please see that file. 
+ 
     return render_template(
         'go.html',
         query=query,

@@ -3,6 +3,18 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    Loads in data and converts to DataFrame
+
+    Input
+    ==============
+    messages_filepath: filepath to messages.csv
+    categories_filepath: filepath to categories.csv
+
+    Returns
+    ==============
+    DataFrame
+    '''
     # Loading in the csv files
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
@@ -13,6 +25,17 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
+    '''
+    Cleans the DataFrame by expanding categories, converting to binary numbers for each category, and dropping duplicates
+
+    Input
+    ==============
+    df: DataFrame
+
+    Returns
+    ==============
+    DataFrame
+    '''
 
     # Creating a separate DataFrame to get categories
     categories = df['categories'].str.split(';',expand=True,)
@@ -42,6 +65,14 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''
+    Saves preprocessed DataFrame to a given database_filename
+    
+    Input
+    ==============
+    df: preprocessed DataFrame
+    database_filename: name of database file
+    '''
     # Creating db engine
     engine = create_engine('sqlite:///'+database_filename)
     df.to_sql('messages', engine, index=False)

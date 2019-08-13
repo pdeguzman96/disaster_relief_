@@ -39,6 +39,16 @@ A pickled model was loaded into the webapp linked at the top for you to use if y
 
 Just type in a message into the textbox above and click **Classify Message**.
 
+## Class Imbalance Limitation
+
+The training dataset classes are heavily imbalanced. The screenshot below shows one of the plots that can be found in the webpage.
+
+![Input text box](assets/plots.png "Input text box")
+
+This is a barplot counting occurrence for each instance a message was labeled as one of the 36 categories. Some categories have very few examples (Child Alone has 0!) and some examples have many examples (Related).
+
+Models work best when classes are roughly evenly distributed. Thus, when optimizing a model like this, it's important to optimize a metric like **recall** $$e=mc^2$$ 
+
 ## Dependencies
 
 - sqlalchemy

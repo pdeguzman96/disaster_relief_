@@ -47,7 +47,7 @@ The training dataset classes are heavily imbalanced. The screenshot below shows 
 
 This is a barplot counting occurrence for each instance a message was labeled as one of the 36 categories. Some categories have very few examples (Child Alone has 0!) and some examples have many examples (Related).
 
-Models work best when classes are roughly evenly distributed. Thus, when optimizing a model like this, it's important to optimize a metric like **recall** (of all the *actual positive instances* of a label, how many did the model correctly identify?) or **precision** (of all the *instances that the model labeled positive*, how many did the model correctly identify?) can help the model behave in a more preferable way. 
+Models work best when classes are roughly evenly distributed. Thus, when optimizing a model like this, it's important to optimize a metric like **recall** (of all the *actual positive instances* of a label, how many did the model correctly identify?) or **precision** (of all the *instances that the model labeled positive*, how many did the model correctly identify?), These can help the model behave in a more preferable way. 
 
 In this project, I used an f1-score to optimize the model to balance both **recall** and **precision** to help the model identify categories with less examples without sacrificing precision.
 

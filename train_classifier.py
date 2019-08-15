@@ -4,11 +4,13 @@ import pandas as pd
 import numpy as np
 from joblib import dump,load
 from sqlalchemy import create_engine
+import warnings
 
 # ML
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import train_test_split
@@ -123,7 +125,18 @@ def main():
         model = build_model()
         
         print('Training model...')
-        model.fit(X_train, y_train)
+        warnings.filterwarnings("ignore")
+        parameters = [
+              {'clf__estimator':[BernoulliNB()],
+               'clf__estimator__alpha':np.arange(0.3,1.7,.25)},
+              {'clf__estimator':[RandomForestClassifier()],
+               'clf__estimator__n_estimators': np.arange(20,51,10),
+               'clf__estimator__criterion':['gini','entropy']}            
+             ]
+        cust_scorer = make_scorer(custom_scorer)
+        grid_search = GridSearchCV(model,parameters,scoring=cust_scorer,cv=3,n_jobs=-1)
+        grid_search.fit(X_train,y_train)
+        model = grid_search.best_estimator_
 
         print('Evaluating model & printing classification report for each category...')
         evaluate_model(model, X_test, y_test)
@@ -137,7 +150,7 @@ def main():
         print('Please provide the filepath of the disaster messages database '\
               'as the first argument and the filepath of the pickle file to '\
               'save the model to as the second argument. \n\nExample: python '\
-              'train_classifier.py ../data/DisasterResponse.db classifier.joblib')
+              'train_classifier.py ./data/DisasterResponse.db classifier.joblib')
     
 if __name__ == '__main__':
     main()
